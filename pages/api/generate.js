@@ -15,22 +15,24 @@ export default async function (req, res) {
     return;
   }
 
-  const animal = req.body.animal || '';
-  if (animal.trim().length === 0) {
-    res.status(400).json({
-      error: {
-        message: "Please enter a valid animal",
-      }
-    });
-    return;
-  }
+  // const animal = req.body.animal || '';
+  // if (animal.trim().length === 0) {
+  //   res.status(400).json({
+  //     error: {
+  //       message: "Please enter a valid animal",
+  //     }
+  //   });
+  //   return;
+  // }
 
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: generatePrompt(animal),
-      temperature: 0.6,
+      prompt: req.body.data,
+      max_tokens: 700,
+      temperature: 0,
     });
+    console.log(completion.data.choices, "completion ", req.body.data)
     res.status(200).json({ result: completion.data.choices[0].text });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
